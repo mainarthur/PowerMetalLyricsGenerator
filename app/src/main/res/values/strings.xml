@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Power Metal Lyrics Generator</string>
+    <string name="hello_world">Enter number of senteces:</string>
+	<string name="generate">Generate</string>
+</resources>
