@@ -7,9 +7,9 @@ public class TextGenerator
 	public static abstract class TextListener {
 		private int mCount;
 
-		public TextListener(int mCount)
+		public TextListener()
 		{
-			this.mCount = mCount;
+			
 		}
 
 		public void setCount(int mCount)
@@ -32,8 +32,12 @@ public class TextGenerator
 	private static String[] sAdjectvies = {"snowy", "shining", "growing", "ancient", "rising", "crystal", "fantastical", "soulful", "agressive", "courageous", "defiant", "icy", "misty", "graceful", "bloody", "cloudy"};
 	private static String[] sNouns = {"moonlight", "path", "ice", "darkness", "wings", "light", "skies", "dream", "clouds", "abyss", "fire", "stars", "lands", "hearts", "plains", "mountain", "night", "battle cry", "sun", "souls", "heavens", "destiny", "defendors", "fields", "sunlight"};
 	
+	private static String[][] sWords = {sVerbs, sAdverbs, sPrepositions, sAdjectvies, sNouns};
+	
+	private static Random sRandom = new Random();
+	
 	public static String getRandomItem(String [] items) {
-		return items[new Random().nextInt(items.length - 1)];
+		return items[sRandom.nextInt(items.length - 1)];
 	}
 	
 	public static void generateLyrics(TextListener listener) {
@@ -47,22 +51,22 @@ public class TextGenerator
 				if(p1.length < 1)
 					return null;
 				mListener = p1[0];
-				String text = "";
+				StringBuilder text = new StringBuilder();
 				for(int i = 0; i < mListener.getCount(); i++) {
-					text += getRandomItem(sVerbs);
-					text += " ";
-					text += getRandomItem(sAdverbs);
-					text += " ";
-					text += getRandomItem(sPrepositions);
-					text += " ";
-					text += getRandomItem(sAdjectvies);
-					text += " ";
-					text += getRandomItem(sNouns);
-					text += "\n";
-					if(i != 0 && (i%4)==0)
-						text += "\n";
+					for(int j = 0; j < sWords.length; j++) {
+						text.append(getRandomItem(sWords[j]));
+						if(j+1 == sWords.length) {
+							text.append("\n");
+						} else {
+							text.append(" ");
+						}
+					}
+					
+					if(i%4 == 0 && i != 0) {
+						text.append("\n");
+					}
 				}
-				return text;
+				return text.toString();
 			}
 			
 			@Override

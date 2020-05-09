@@ -11,6 +11,11 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 	Button mGenerateButton;
 	EditText mNumberEditText;
 	TextView mResultTextView;
+	
+	TextGenerator.TextListener mListener;
+	
+	boolean mGeneratingFlag = false;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -24,13 +29,33 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 		mGenerateButton.setOnClickListener(this);
 		mResultTextView.setOnLongClickListener(this);
 		
+		mListener = new TextGenerator.TextListener() {
+
+			@Override
+			public void onText(String text)
+			{
+				mResultTextView.setText(text);
+				mGeneratingFlag = false;
+			}
+
+			@Override
+			public void onError(Throwable err)
+			{
+				mResultTextView.setText("Error");
+				mGeneratingFlag = false;
+			}
+	
+		};
+		
 		onClick(mGenerateButton);
+		
+		
     }
 
 	@Override
 	public void onClick(View p1)
 	{
-		if(p1.getId() != mGenerateButton.getId())
+		if(p1.getId() != mGenerateButton.getId() || mGeneratingFlag)
 			return;
 			
 		int count = 10;
@@ -51,26 +76,14 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 			mNumberEditText.setText("1");
 		}
 		if(count > 1000) {
-			count = 1000;
-			mNumberEditText.setText("1000");
+			//count = 1000;
+			//mNumberEditText.setText("1000");
 		}
 		
-		TextGenerator.generateLyrics(new TextGenerator.TextListener(count) {
-
-				@Override
-				public void onText(String text)
-				{
-					mResultTextView.setText(text);
-				}
-
-				@Override
-				public void onError(Throwable err)
-				{
-					mResultTextView.setText("Error");
-				}
-				
-			
-		});
+		mListener.setCount(count);
+		mGeneratingFlag = true;
+		
+		TextGenerator.generateLyrics(mListener);
 	}
 
 	@Override
